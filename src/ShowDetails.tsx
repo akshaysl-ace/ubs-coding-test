@@ -1,20 +1,33 @@
 import React from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { useMovies } from './moviesContext';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from './store.js';
+import { deleteMovie } from './moviesSlice.js';
 
-function ShowDetails() {
-  const { id } = useParams();
-  const { selectedMovies, handleDeleteMovie } = useMovies();
-  const movie = selectedMovies.find(i => i.id == id) || {};
+interface Show {
+  id: number;
+  name: string;
+  image?: { medium: string };
+  rating?: { average: number | null };
+  genres?: string[];
+  status?: string;
+  summary?: string;
+}
+
+const ShowDetails: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const { selectedMovies } = useSelector((state: RootState) => state.movies);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const movie = selectedMovies.find((i) => i.id === Number(id)) || ({} as Show);
 
-  const handleDelete = (e, id) => {
+  const handleDelete = (e: React.MouseEvent, id: number) => {
     e.preventDefault();
     navigate('/');
-    handleDeleteMovie(id);
+    dispatch(deleteMovie(id));
   };
 
-  if (!movie) {
+  if (!movie.id) {
     return (
       <div className='w-full bg-gray-100 flex items-center justify-center p-4 min-h-screen'>
         <p className='text-gray-500'>Movie not found</p>
@@ -55,13 +68,14 @@ function ShowDetails() {
           Back to Home
         </Link>
         <button
-          onClick={e => handleDelete(e, movie.id)}
-          className='px-6 py-3 bg-blue-500 text-white rounded-lg ml-5'>
+          onClick={(e) => handleDelete(e, movie.id)}
+          className='px-6 py-3 bg-blue-500 text-white rounded-lg ml-5'
+        >
           Delete
         </button>
       </div>
     </div>
   );
-}
+};
 
 export default ShowDetails;

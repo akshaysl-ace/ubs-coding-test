@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-const NotFound = () => {
+const NotFound: React.FC = () => {
   const navigate = useNavigate();
   return (
     <>
@@ -10,7 +10,8 @@ const NotFound = () => {
       <button
         style={{ marginLeft: '280px', marginTop: '50px' }}
         className='btn btn primary'
-        onClick={() => navigate('/')}>
+        onClick={() => navigate('/')}
+      >
         Go back
       </button>
     </>
