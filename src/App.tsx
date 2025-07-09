@@ -6,16 +6,17 @@ import {
   setIsDropdownOpen,
   selectShow,
   deleteMovie,
-  showDetails,
   fetchShows,
   setShows,
 } from "./moviesSlice";
 import "./index.css";
+import { useNavigate } from "react-router-dom";
 
 const App: React.FC = () => {
   const { query, shows, selectedMovies, loading, error, isDropdownOpen } =
     useSelector((state: RootState) => state.movies);
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate()
   const dropdownRef = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
@@ -44,6 +45,11 @@ const App: React.FC = () => {
 
     return () => clearTimeout(debounce);
   }, [query, dispatch]);
+
+  const showDetails = (e:React.MouseEvent<HTMLDivElement, MouseEvent>, movieId: number) => {
+    e.preventDefault()
+    navigate(`/details/${movieId}`)
+  }
 
   return (
     <div className="w-full bg-gray-100 flex flex-col items-center p-4">
@@ -103,17 +109,17 @@ const App: React.FC = () => {
               ? selectedMovies.map((movie) => (
                   <div
                     key={movie.id}
-                    className="w-full bg-white rounded-lg shadow-md overflow-hidden flex items-center justify-between gap-4 p-4 hover:bg-blue-200"
+                    className="w-full bg-white rounded-lg shadow-md overflow-hidden flex items-center justify-between gap-4 p-4"
                   >
                     <img
-                      onClick={(e) => dispatch(showDetails({ e, movie }))}
+                      onClick={(e) => showDetails( e, movie.id )}
                       src={movie.image?.medium || ""}
                       alt={movie.name}
                       className="w-16 h-16 object-cover rounded"
                     />
-                    <div onClick={(e) => dispatch(showDetails({ e, movie }))}>
-                      <h3 className="text-lg font-semibold">{movie.name}</h3>
-                      <p className="text-sm text-gray-500">
+                    <div onClick={(e) => showDetails( e, movie.id )}>
+                      <h3 className="text-lg font-semibold text-green-300">{movie.name}</h3>
+                      <p className="text-sm text-blue-500">
                         {movie.genres?.join(", ")}
                       </p>
                       <p className="text-sm text-gray-600">

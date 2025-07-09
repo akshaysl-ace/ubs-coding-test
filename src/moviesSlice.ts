@@ -81,12 +81,6 @@ const moviesSlice = createSlice({
         (movie) => movie.id !== action.payload
       );
     },
-    showDetails(
-      state,
-      action: PayloadAction<{ e: React.MouseEvent; movie: Show }>
-    ) {
-      // Navigation handled in component via useNavigate
-    },
   },
   extraReducers: (builder) => {
     builder
@@ -126,6 +120,5 @@ export const {
   setError,
   selectShow,
   deleteMovie,
-  showDetails,
 } = moviesSlice.actions;
 export default moviesSlice.reducer;
